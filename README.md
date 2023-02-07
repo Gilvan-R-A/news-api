@@ -2,7 +2,7 @@
    API_Node
 </h1>   
 
-API de postagens criado em Node.js e Express. Em conjunto com <a href="https://github.com/Gilvan-R-A/Site_Noticias">Site_Noticias</a>, permite ao usuário cadastrar e visualizar postagens de notícias.   
+API de postagens criado em **Node.js** e **Express**. Em conjunto com <a href="https://github.com/Gilvan-R-A/Site_Noticias">Site_Noticias</a>, permite ao usuário cadastrar e visualizar postagens de notícias.   
 
 ## Requisitos   
 
