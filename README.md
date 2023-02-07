@@ -39,12 +39,13 @@ Nenhum
 
 **Conteúdo:**   
 ```javascript
-Lista { 
+Postagem { 
 “idpostagem”: valor,
  “titulopostagem”: valor,
  “conteudopostagem”: valor,
  “categoriapostagem”: valor,
- “datapostagem”: valor}   
+ “datapostagem”: valor
+ }   
  
  ```
 - **Resposta de Erro:**   
@@ -74,12 +75,13 @@ Nenhum
 **Conteúdo:**   
 ```javascript   
 
-Objeto { 
+Postagem { 
 “idpostagem”: valor,
  “titulopostagem”: valor,
  “conteudopostagem”: valor,
  “categoriapostagem”: valor,
- “datapostagem”: valor}   
+ “datapostagem”: valor
+ }   
  
  ```   
  
@@ -106,11 +108,12 @@ Nenhum
 ```javascript   
 
 
-Objeto Postagem: { 
+Postagem: { 
  “titulopostagem”: valor,
  “conteudopostagem”: valor,
  “categoriapostagem”: valor,
- “datapostagem”: valor}   
+ “datapostagem”: valor
+ }   
  
  ```
 
@@ -147,11 +150,12 @@ idPostagem
 - **Parâmetro de Body:**   
 ```javascript   
 
-Objeto Postagem: { 
+Postagem: { 
  “titulopostagem”: valor,
  “conteudopostagem”: valor,
  “categoriapostagem”: valor,
- “datapostagem”: valor}   
+ “datapostagem”: valor
+ }   
  
  ```   
  
