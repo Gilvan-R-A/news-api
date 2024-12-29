@@ -1,206 +1,234 @@
 <h1 align="center">
-   News_API
+   API de Notícias - Node.js
 </h1>   
 
-API de postagens de notícias criado em **Node.js** e **Express**. Em conjunto com <a href="https://github.com/Gilvan-R-A/News_System">News_System</a>, permite ao usuário cadastrar e visualizar postagens de notícias.   
+Esta é uma API desenvolvida com **Node.js, Express,** e **PostgreSQL** para gerenciar postagens em um site de notícias. Ela permite realizar operações de CRUD (Create, Read, Update, Delete) sobre postagens e também oferece funcionalidades de login de usuários.   
 
-## Requisitos   
-
-- Git   
-- Node instalado na sua máquina   
-- Conhecimentos de Javascript e Node   
-
-Para executar o projeto, digite o seguinte comando no seu terminal:   
-
-``` javascript
-
-node main.js   
-
-```
-  
-<h3 align="center">
-   Documentação da API
-</h3>
-
-  
-## Método listarTodos( )
-
-
-- **URL(Rota):**   
-/postagem   
-- **Método HTTP:**   
-Get   
-- **Parâmetros de URL:**   
-Nenhum   
-- **Parâmetro de Body:**   
-Nenhum   
-- **Resposta de Sucesso:**   
-**Código:** 200 (OK)   
-
-**Conteúdo:**   
-```javascript
-Postagem { 
-“idpostagem”: valor,
- “titulopostagem”: valor,
- “conteudopostagem”: valor,
- “categoriapostagem”: valor,
- “datapostagem”: valor
- }   
- 
- ```
-- **Resposta de Erro:**   
-**Código:** 404 (Não encontrado)   
-**Conteúdo:** false
-- **Exemplo de uso em JS:**   
-```javascript   
-
-var resposta = fetch(‘http://localhost:3000/postagem’);   
+## Estrutura de Diretórios   
 
 ```   
+news-api/
+├── controller/
+│   ├── PostagemController.js
+│   └── UsuarioController.js
+├── model/
+│   ├── Postagem.js
+│   └── Usuario.js
+├── util/
+│   ├── ConnectionFactory.js
+│   └── Rotas.js
+├── main.js
+├── meubanco.sql
+├── package.json
+```   
 
-## Método listarPorId( )   
+- **controller/**: Contém os controladores para as postagens e usuários.
+- **model/**: Contém as definições dos modelos de dados para postagens e usuários.
+- **util/**: Contém utilitários como a fábrica de conexões com o banco e as rotas da API.
+- **main.js**: Arquivo principal que configura e inicializa o servidor.
+- **meubanco.sql**: Script para criar as tabelas no banco de dados PostgreSQL e inserir dados iniciais.
+- **package.json**: Gerenciador de dependências e scripts do projeto.   
+
+## Tecnologias Utilizadas   
+
+- **Node.js**: Ambiente de execução JavaScript.
+- **Express**: Framework para criar servidores HTTP.
+- **PostgreSQL**: Banco de dados relacional para armazenar dados.
+- **pg**: Biblioteca para interação com PostgreSQL.
+- **body-parser**: Middleware para parsing do corpo das requisições.
+- **cors**: Middleware para permitir requisições CORS (Cross-Origin Resource Sharing).   
 
 
+## Endpoints da API   
 
-- **URL (Rota):**   
-/postagem/:idPostagem   
-- **Método HTTP:**   
-Get
-- **Parâmetros de URL:**   
-idPostagem   
-- **Parâmetro de Body:**   
-Nenhum   
-- **Resposta de Sucesso:**   
-**Código:** 200 (OK)   
-**Conteúdo:**   
-```javascript   
+### Postagens   
 
-Postagem { 
-“idpostagem”: valor,
- “titulopostagem”: valor,
- “conteudopostagem”: valor,
- “categoriapostagem”: valor,
- “datapostagem”: valor
- }   
- 
- ```   
- 
-- **Resposta de Erro:**   
-**Código:** 404 (Não encontrado)   
-**Conteúdo:** false   
-- **Exemplo de uso em JS:**   
-```javascript   
+**1. Listar todas as postagens**   
 
-var resposta = fetch(‘http://localhost:3000/postagem/1’);   
+- **Método: GET /postagem**
+- **Descrição:** Retorna todas as postagens armazenadas.
+- **Resposta:**   
 
 ```   
- 
-## Método cadastrar( )
+[
+  {
+    "idPostagem": 1,
+    "tituloPostagem": "Primeira Postagem",
+    "conteudoPostagem": "Essa é a minha primeira postagem",
+    "categoriaPostagem": "teste",
+    "dataPostagem": "19/08/2023"
+  }
+]
+```   
+**2. Listar postagem por ID**   
 
+- **Método:** GET /postagem/:idPostagem
+- **Descrição:** Retorna a postagem com o ID especificado.
+- **Parâmetros:**
+   - idPostagem: ID da postagem.   
+- **Resposta:**   
 
-- **URL (Rota):**   
-/postagem   
-- **Método HTTP:**   
-Post   
-- **Parâmetros de URL:**   
-Nenhum   
-- **Parâmetro de Body:**   
-```javascript   
-
-
-Postagem: { 
- “titulopostagem”: valor,
- “conteudopostagem”: valor,
- “categoriapostagem”: valor,
- “datapostagem”: valor
- }   
- 
- ```
-
-- **Resposta de Sucesso:**   
-**Código:** 201 (OK CRIADO)   
-**Conteúdo:** true   
-- **Resposta de Erro:**   
-**Código:** 404 (Não encontrado)   
-**Conteúdo:** false   
-- **Exemplo de uso em JS:**   
-```javascript   
-
-var resposta = fetch(‘http://localhost:3000/postagem’, 
+```   
 {
-    method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: Objeto (Postagem)
- });   
-   
-   ```   
-    
-## Método alterar( )   
+  "idPostagem": 1,
+  "tituloPostagem": "Primeira Postagem",
+  "conteudoPostagem": "Essa é a minha primeira postagem",
+  "categoriaPostagem": "teste",
+  "dataPostagem": "19/08/2023"
+}
+```   
 
+**3. Cadastrar nova postagem**   
 
-- **URL (Rota):**   
-/postagem/:idPostagem   
-- **Método HTTP:**   
-Put   
-- **Parâmetros de URL:**   
-idPostagem   
-- **Parâmetro de Body:**   
-```javascript   
+- **Método:** POST /postagem
+- **Descrição:** Cadastra uma nova postagem.
+- **Corpo da Requisição:**   
 
-Postagem: { 
- “titulopostagem”: valor,
- “conteudopostagem”: valor,
- “categoriapostagem”: valor,
- “datapostagem”: valor
- }   
- 
- ```   
- 
-- **Resposta de Sucesso:**   
-**Código:** 200 (OK)   
-**Conteúdo:** true   
-- **Resposta de Erro:**   
-**Código:** 404 (Não encontrado)   
-**Conteúdo:** false   
-- **Exemplo de uso em JS:**   
-```javascript   
-
-var resposta = fetch(‘http://localhost:3000/postagem/1’, 
+```   
 {
-    method: put,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: Objeto (Postagem)
- });   
-           
+  "tituloPostagem": "Título da Postagem",
+  "conteudoPostagem": "Conteúdo da postagem",
+  "categoriaPostagem": "Categoria",
+  "dataPostagem": "19/08/2023"
+}   
 ```   
-
-            
-## Método excluir( )   
-
-
-- **URL (Rota):**   
-/postagem/:idPostagem   
-- **Método HTTP:**   
-Delete   
-- **Parâmetros de URL:**   
-idPostagem   
-- **Parâmetro de Body:**   
-Nenhum   
-- **Resposta de Sucesso:**   
-**Código:** 200 (OK)   
-**Conteúdo:** true   
-- **Resposta de Erro:**   
-**Código:** 404 (Não encontrado)   
-**Conteúdo:** false   
-- **Exemplo de uso em JS:**   
-```javascript   
-
-var resposta = fetch(‘http://localhost:3000/postagem/1’, {method: delete});   
+- **Resposta:**   
 
 ```   
+{ "success": true }
+```   
+
+**4. Alterar postagem**   
+
+- **Método:** PUT /postagem/:idPostagem
+- **Descrição:** Altera os dados de uma postagem existente.
+- **Parâmetros:**
+   - idPostagem: ID da postagem a ser alterada.   
+- **Corpo da Requisição:**   
+
+```   
+{
+  "tituloPostagem": "Novo Título",
+  "conteudoPostagem": "Novo conteúdo",
+  "categoriaPostagem": "Nova categoria",
+  "dataPostagem": "27/08/2023"
+}
+```   
+
+- **Resposta:**   
+
+```   
+{ "success": true }
+```   
+
+**5. Excluir postagem**   
+
+- **Método:** DELETE /postagem/:idPostagem
+- **Descrição:** Exclui uma postagem pelo ID.
+- **Parâmetros:**   
+   - idPostagem: ID da postagem a ser excluída.   
+
+- **Resposta:**   
+
+```  
+{ "success": true }
+```   
+
+## Usuários   
+
+**1. Login de usuário**   
+
+- **Método:** POST /usuarioLogin
+- **Descrição:** Realiza o login de um usuário com email e senha.   
+- **Corpo da Requisição:**   
+
+```   
+{
+  "emailUsuario": "usuario@dominio.com",
+  "senhaUsuario": "senha123"
+}
+```   
+
+- **Resposta:**   
+   - **200 OK**:   
+
+```   
+{ "msg": "Usuário logado" }
+```   
+- **404 Not Found:**   
+
+```   
+{ "msg": "Email ou senha inválidos" }
+```   
+
+**2. Cadastrar novo usuário**   
+
+- **Método:** POST /usuario
+- **Descrição:** Cadastra um novo usuário.   
+- **Corpo da Requisição:**   
+
+```   
+{
+  "emailUsuario": "novo@usuario.com",
+  "senhaUsuario": "senha123"
+}
+```   
+
+- **Resposta:**   
+
+```   
+{ "success": true }
+```   
+
+## Configuração do Banco de Dados   
+
+Para configurar o banco de dados PostgreSQL, utilize o script meubanco.sql que cria as tabelas necessárias e insere um exemplo de postagem.   
+
+1. Crie a tabela **postagem** com o seguinte comando SQL:   
+
+```   
+create table postagem(
+    idPostagem serial primary key,
+    tituloPostagem varchar(200) not null,
+    conteudoPostagem varchar(500) not null,
+    categoriaPostagem varchar(100) not null,
+    dataPostagem varchar(20) not null
+);
+```   
+
+2. Insira um exemplo de postagem:   
+
+```   
+insert into postagem (titulopostagem, conteudopostagem, categoriapostagem, datapostagem) 
+values ('Primeira Postagem', 'Essa é a minha primeira postagem', 'teste', '19/08/2023');
+```   
+
+## Instalação e Execução   
+
+### Requisitos   
+
+- **Node.js**: Baixe e instale a versão mais recente do Node.js.
+- **PostgreSQL**: Instale o PostgreSQL e configure o banco de dados conforme o arquivo meubanco.sql.   
+
+**Passos**   
+
+1. Clone o repositório do projeto:   
+
+```   
+git clone https://github.com/Gilvan-R-A/news-api.git
+cd news-api
+```   
+
+2. Instale as dependências:   
+
+```   
+npm install
+```   
+
+3. Execute o servidor:   
+
+```   
+npm start
+```   
+
+4. A API estará disponível em **http://localhost:3000**.   
