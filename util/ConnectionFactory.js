@@ -5,7 +5,7 @@ module.exports = class ConnectionFactory{
         return new Pool({
             user: 'postgres',
             host: 'localhost',
-            database: 'Site_Noticias',
+            database: 'API_Noticias',
             password: '123',
             port: 5432
         });
