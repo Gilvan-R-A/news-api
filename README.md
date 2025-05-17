@@ -4,6 +4,13 @@
 
 Esta é uma API desenvolvida com **Node.js, Express,** e **PostgreSQL** para gerenciar postagens em um site de notícias. Ela permite realizar operações de CRUD (Create, Read, Update, Delete) sobre postagens e também oferece funcionalidades de login de usuários.   
 
+
+## Link do Deploy (Produção)   
+
+A API está disponível publicamente através do Render:   
+
+https://news-api-u1bc.onrender.com
+
 ## Estrutura de Diretórios   
 
 ```   
@@ -31,17 +38,39 @@ news-api/
 
 ## Tecnologias Utilizadas   
 
-- **Node.js**: Ambiente de execução JavaScript.
+- **Node.js**: Backend em JavaScript.
 - **Express**: Framework para criar servidores HTTP.
 - **PostgreSQL**: Banco de dados relacional para armazenar dados.
 - **pg**: Biblioteca para interação com PostgreSQL.
 - **body-parser**: Middleware para parsing do corpo das requisições.
 - **cors**: Middleware para permitir requisições CORS (Cross-Origin Resource Sharing).   
+- **dotenv** - Variáveis de ambiente   
 
 
 ## Endpoints da API   
 
 ### Postagens   
+
+| Método | Rota                    | Descrição                    | Ambiente         |
+| ------ | ----------------------- | ---------------------------- | ---------------- |
+| GET    | `/postagem`             | Listar todas as postagens    | Local e Produção |
+| GET    | `/postagem/:idPostagem` | Obter postagem por ID        | Local e Produção |
+| POST   | `/postagem`             | Criar nova postagem          | Local e Produção |
+| PUT    | `/postagem/:idPostagem` | Atualizar postagem existente | Local e Produção |
+| DELETE | `/postagem/:idPostagem` | Deletar uma postagem         | Local e Produção |
+
+### Usuários   
+
+| Método | Rota            | Descrição              | Ambiente         |
+| ------ | --------------- | ---------------------- | ---------------- |
+| POST   | `/usuario`      | Cadastrar novo usuário | Local e Produção |
+| POST   | `/usuarioLogin` | Login de usuário       | Local e Produção |
+
+
+Para usar em produção, prefixe com https://news-api-u1bc.onrender.com.   
+Exemplo: https://news-api-u1bc.onrender.com/postagem   
+
+## Exemplos de Requisição
 
 **1. Listar todas as postagens**   
 
