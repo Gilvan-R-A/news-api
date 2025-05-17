@@ -12,5 +12,5 @@ select * from postagem
 
 /*código para inserir dados na tabela postagem*/
 insert into postagem (titulopostagem, conteudopostagem, categoriapostagem, datapostagem) 
-values ('Primeira Postagem', 'Essa é a minha primeira postagem', 'teste', '07/07/2020')
+values ('Alta do Real', 'O Real supervaloriza 3 semanas seguidas em comparação com o dólar', 'Economia', '21/11/2025');
 

@@ -1,4 +1,5 @@
 //variaveis do servidor base
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const rotas = require('./util/Rotas');
@@ -6,7 +7,7 @@ const rotas = require('./util/Rotas');
 const cors = require('cors');
 
 const app = express();
-const porta = 3000;
+const porta = process.env.PORT || 3000;
 
 
 //configurando o servidor

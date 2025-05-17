@@ -12,7 +12,7 @@ module.exports = class PostagemController{
             var resultado = await this.conexao.query('select * from postagem');
             response.status(200).json(resultado.rows);
         } catch (error) {
-            console.error(`Erro ao listar as postagens!! Erro: ${erro}`);
+            console.error(`Erro ao listar as postagens!! Erro: ${error}`);
             response.status(404).send(false);
         }
     }
