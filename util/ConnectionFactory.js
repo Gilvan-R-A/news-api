@@ -27,6 +27,11 @@ module.exports = class ConnectionFactory{
 
                      sqliteDb.prepare(`
                         INSERT INTO postagem (tituloPostagem, conteudoPostagem, categoriaPostagem, dataPostagem) VALUES (?, ?, ?, ?)`).run('Primeira Postagem', 'Essa é a minha primeira postagem', 'Editorial', '06/07/2025');
+
+                    sqliteDb.prepare(`
+                        INSERT INTO usuario (emailUsuario, senhaUsuario) 
+                        VALUES (?, ?)
+                        `).run('admin@teste.com', '123');
             }
             return sqliteDb;
         }

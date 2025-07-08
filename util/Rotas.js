@@ -34,14 +34,12 @@ controladorRotas.delete('/postagem/:idPostagem', (request, response) => {
 
 
 //rotas de acesso ao Usuario
-controladorRotas.post('/usuarioLogin', (request, response) => {
+controladorRotas.get('/usuarioLogin', (request, response) => {
     new UsuarioController().logar(request, response);
 });
 
 controladorRotas.post('/usuario', (request, response) => {
     new UsuarioController().cadastrar(request, response);
 });
-
-
 
 module.exports = controladorRotas;
