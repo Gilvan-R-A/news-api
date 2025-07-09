@@ -66,7 +66,7 @@ module.exports = class UsuarioController {
       );
       }
 
-      return response.status(200).send(true);
+      return response.status(201).send(true);
     } catch (error) {
       console.error(`Erro ao cadastrar usuário!! Erro: ${error}`);
       response.status(404).send(false);
