@@ -31,7 +31,7 @@ module.exports = class ConnectionFactory{
                     sqliteDb.prepare(`
                         INSERT INTO usuario (emailUsuario, senhaUsuario) 
                         VALUES (?, ?)
-                        `).run('admin@teste.com', '123');
+                        `).run('admin@teste.com', '!9Cavalo7');
             }
             return sqliteDb;
         }

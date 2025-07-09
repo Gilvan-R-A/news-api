@@ -1,5 +1,6 @@
 const ConnectionFactory = require("../util/ConnectionFactory");
 const Usuario = require("../model/Usuario");
+const ValidadorUsuario = require("../util/ValidadorUsuario");
 
 module.exports = class UsuarioController {
   constructor() {
@@ -55,6 +56,26 @@ module.exports = class UsuarioController {
         request.body.senhaUsuario
       );
 
+      if (!ValidadorUsuario.validaEmail(usuario.emailUsuario)) {
+        return response.status(400).json({msg: "Email inválido"});
+      }
+
+      if (!ValidadorUsuario.validaSenha(usuario.senhaUsuario)) {
+        return response.status(400).json({
+          msg: "A senha deve conter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais."
+        });
+      }
+
+      const existe = await ValidadorUsuario.usuarioJaExiste(
+        this.conexao, 
+        usuario.emailUsuario, 
+        this.isSQLite
+      );
+
+      if (existe) {
+        return response.status(409).json({msg: "Usuário com este e-mail já existe"});
+      }
+
       if (this.isSQLite) {
         this.conexao.prepare(`
           INSERT INTO usuario (emailUsuario, senhaUsuario) VALUES (?, ?) 
@@ -72,5 +93,5 @@ module.exports = class UsuarioController {
       response.status(404).send(false);
     }
   }
- 
+
 };
