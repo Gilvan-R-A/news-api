@@ -1,6 +1,7 @@
 const ConnectionFactory = require("../util/ConnectionFactory");
 const Usuario = require("../model/Usuario");
 const ValidadorUsuario = require("../util/ValidadorUsuario");
+const jwt = require("jsonwebtoken");
 
 module.exports = class UsuarioController {
   constructor() {
@@ -26,7 +27,13 @@ module.exports = class UsuarioController {
           .get(usuario.emailUsuario, usuario.senhaUsuario);
 
         if (row) {
-          return response.status(200).json({ msg: "Usuário logado" });
+          const token = jwt.sign(
+            { email: usuario.emailUsuario }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: "1h"}
+          );
+
+          return response.status(200).json({ msg: "Usuário logado", token });
         } else {
           return response.status(404).json({ msg: "Email ou senha inválidos" });
         }
@@ -37,7 +44,13 @@ module.exports = class UsuarioController {
         );
 
         if (resultado.rowCount > 0) {
-          response.status(200).json({ msg: "Usuário logado" });
+          const token = jwt.sign(
+            { email: usuario.emailUsuario }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: "1h"}
+          );
+
+          response.status(200).json({ msg: "Usuário logado", token });
         } else {
           response.status(404).json({ msg: "Email ou senha inválidos" });
         }
