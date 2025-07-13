@@ -2,7 +2,7 @@
    API de Notícias - Node.js
 </h1>   
 
-Esta é uma API desenvolvida com **Node.js, Express,** e **PostgreSQL** para gerenciar postagens em um site de notícias. Ela permite realizar operações de CRUD (Create, Read, Update, Delete) sobre postagens e também oferece funcionalidades de login de usuários.   
+Esta é uma API desenvolvida com **Node.js, Express,** e suporte a dos bancos de dados: **PostgreSQL** (produção) e **SQLite** (modo local). Ela permite o gerenciamento de postagens de notícias e autenticação de usuários, com proteção de rotas usando **JWT**.   
 
 
 ## Link do Deploy (Produção)   
@@ -18,35 +18,62 @@ news-api/
 ├── controller/
 │   ├── PostagemController.js
 │   └── UsuarioController.js
+├── middleware/
+|   └── auth.js
 ├── model/
 │   ├── Postagem.js
 │   └── Usuario.js
 ├── util/
 │   ├── ConnectionFactory.js
-│   └── Rotas.js
+│   ├── Rotas.js
+|   └── ValidadorUsuario.js
+├── .env
 ├── main.js
 ├── meubanco.sql
 ├── package.json
-```   
+``` 
 
-- **controller/**: Contém os controladores para as postagens e usuários.
-- **model/**: Contém as definições dos modelos de dados para postagens e usuários.
-- **util/**: Contém utilitários como a fábrica de conexões com o banco e as rotas da API.
-- **main.js**: Arquivo principal que configura e inicializa o servidor.
-- **meubanco.sql**: Script para criar as tabelas no banco de dados PostgreSQL e inserir dados iniciais.
+# Descrição dos Arquivos
+
+- **controller/**: Controladores que contêm a lógica das rotas (Postagem e Usuário).
+- **model/**: Modelos de dados.   
+- **middleware/auth.js**: Middleware para proteger rotas usando token JWT.
+- **util/**: 
+  - **ConnectionFactory.js**: Abstrai a conexão com PostgreSQL ou SQLite.
+  - **Rotas.js**: Define todas as rotas da API.
+  - **ValidadorUsuario.js**: Contém as validações de email, senha e unicidade de usuário.
+- **.env**: Variáveis de ambiente (JWT_SECRET, USE_SQLITE, etc).
+- **main.js**: Ponto de entrada da aplicação.
+- **meubanco.sql**: Script SQL para PostgreSQL.
 - **package.json**: Gerenciador de dependências e scripts do projeto.   
 
 ## Tecnologias Utilizadas   
 
 - **Node.js**: Backend em JavaScript.
 - **Express**: Framework para criar servidores HTTP.
-- **PostgreSQL**: Banco de dados relacional para armazenar dados.
-- **pg**: Biblioteca para interação com PostgreSQL.
+- **PostgreSQL** e **SQLite**: Bancos de dados relacionais para armazenar dados.
+- **pg** e **better-sqlite3**: Para conexão com banco.
+- **JWT (jsonwebtoken)**: Para autenticação.
 - **body-parser**: Middleware para parsing do corpo das requisições.
 - **cors**: Middleware para permitir requisições CORS (Cross-Origin Resource Sharing).   
 - **dotenv** - Variáveis de ambiente   
 
+## Autenticação JWT   
 
+- O login de usuário retorna um **token JWT**.   
+- Esse token deve ser enviado no cabeçalho **Authorization** das requisições protegidas:   
+
+```
+Authorization: Bearer SEU_TOKEN_AQUI
+```   
+
+- As seguintes rotas exigem autenticação: 
+
+  - POST /postagem
+  - PUT /postagem/:idPostagem
+  - DELETE  /postagem/:idPostagem   
+
+  
 ## Endpoints da API   
 
 ### Postagens   
@@ -64,15 +91,73 @@ news-api/
 | Método | Rota            | Descrição              | Ambiente         |
 | ------ | --------------- | ---------------------- | ---------------- |
 | POST   | `/usuario`      | Cadastrar novo usuário | Local e Produção |
-| POST   | `/usuarioLogin` | Login de usuário       | Local e Produção |
+| GET   | `/usuarioLogin` | Login e geração do JWT      | Local e Produção |
 
 
-Para usar em produção, prefixe com https://news-api-u1bc.onrender.com.   
+Para usar em produção, prefixe com https://news-api-u1bc.onrender.com   
 Exemplo: https://news-api-u1bc.onrender.com/postagem   
 
-## Exemplos de Requisição
+## Validações Implementadas   
 
-**1. Listar todas as postagens**   
+- **Email**:   
+  - Formato válido (ex: usuario@dominio.com)   
+
+- **Senha**:   
+
+  - Mínimo 8 caracteres;
+  - Letras maiúsculas e minúsculas;
+  - Pelo menos um número e um caractere especial.   
+
+- **Usuário único:   
+
+  - Não permite duplicação de email, mesmo com IDs diferentes.   
+
+Essas validações são centralizadas no arquivo: util/ValidadorUsuario.js .   
+
+## Exemplo de Login   
+
+### Requisição (POST/usuarioLogin)   
+
+```   
+{
+  "emailUsuario": "admin@teste.com",
+  "senhaUsuario": "123"
+}
+```   
+
+### Resposta (200 OK)   
+
+```   
+{
+  "msg": "Usuário logado",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+}
+```   
+
+## Exemplos de Requisição   
+
+
+**1. Cadastro de novo usuário**   
+
+- **Método:** POST /usuario
+- **Descrição:** Cadastra um novo usuário.   
+- **Corpo da Requisição:**   
+
+```   
+{
+  "emailUsuario": "novo@usuario.com",
+  "senhaUsuario": "senha123"
+}
+```   
+
+- **Resposta:**   
+
+```   
+{ "success": true }
+```   
+
+
+**2. Listar todas as postagens**   
 
 - **Método: GET /postagem**
 - **Descrição:** Retorna todas as postagens armazenadas.
@@ -89,7 +174,7 @@ Exemplo: https://news-api-u1bc.onrender.com/postagem
   }
 ]
 ```   
-**2. Listar postagem por ID**   
+**3. Listar postagem por ID**   
 
 - **Método:** GET /postagem/:idPostagem
 - **Descrição:** Retorna a postagem com o ID especificado.
@@ -107,7 +192,7 @@ Exemplo: https://news-api-u1bc.onrender.com/postagem
 }
 ```   
 
-**3. Cadastrar nova postagem**   
+**4. Cadastrar nova postagem**   
 
 - **Método:** POST /postagem
 - **Descrição:** Cadastra uma nova postagem.
@@ -127,7 +212,7 @@ Exemplo: https://news-api-u1bc.onrender.com/postagem
 { "success": true }
 ```   
 
-**4. Alterar postagem**   
+**5. Alterar postagem**   
 
 - **Método:** PUT /postagem/:idPostagem
 - **Descrição:** Altera os dados de uma postagem existente.
@@ -150,7 +235,7 @@ Exemplo: https://news-api-u1bc.onrender.com/postagem
 { "success": true }
 ```   
 
-**5. Excluir postagem**   
+**6. Excluir postagem**   
 
 - **Método:** DELETE /postagem/:idPostagem
 - **Descrição:** Exclui uma postagem pelo ID.
@@ -160,52 +245,6 @@ Exemplo: https://news-api-u1bc.onrender.com/postagem
 - **Resposta:**   
 
 ```  
-{ "success": true }
-```   
-
-## Usuários   
-
-**1. Login de usuário**   
-
-- **Método:** POST /usuarioLogin
-- **Descrição:** Realiza o login de um usuário com email e senha.   
-- **Corpo da Requisição:**   
-
-```   
-{
-  "emailUsuario": "usuario@dominio.com",
-  "senhaUsuario": "senha123"
-}
-```   
-
-- **Resposta:**   
-   - **200 OK**:   
-
-```   
-{ "msg": "Usuário logado" }
-```   
-- **404 Not Found:**   
-
-```   
-{ "msg": "Email ou senha inválidos" }
-```   
-
-**2. Cadastrar novo usuário**   
-
-- **Método:** POST /usuario
-- **Descrição:** Cadastra um novo usuário.   
-- **Corpo da Requisição:**   
-
-```   
-{
-  "emailUsuario": "novo@usuario.com",
-  "senhaUsuario": "senha123"
-}
-```   
-
-- **Resposta:**   
-
-```   
 { "success": true }
 ```   
 
@@ -237,7 +276,7 @@ values ('Primeira Postagem', 'Essa é a minha primeira postagem', 'teste', '19/0
 ### Requisitos   
 
 - **Node.js**: Baixe e instale a versão mais recente do Node.js.
-- **PostgreSQL**: Instale o PostgreSQL e configure o banco de dados conforme o arquivo meubanco.sql.   
+- **PostgreSQL**: Instale o PostgreSQL e configure o banco de dados conforme o arquivo meubanco.sql (se não for usar SQLite).   
 
 **Passos**   
 
@@ -254,10 +293,42 @@ cd news-api
 npm install
 ```   
 
-3. Execute o servidor:   
+3. Configure o .env:   
+
+```   
+USE_SQLITE=true             # ou false se quiser usar PostgreSQL
+JWT_SECRET=sua_chave_jwt_segura
+PORT=3000                   # porta local
+DB_USER=...
+DB_HOST=...
+DB_NAME=...
+DB_PASSWORD=...
+DB_PORT=...
+```   
+
+4. Execute o servidor:   
 
 ```   
 npm start
 ```   
 
-4. A API estará disponível em **http://localhost:3000**.   
+5. A API estará disponível em **http://localhost:3000**.   
+
+## Testes com Postman   
+
+- **1. Criar usuário**   
+
+  **POST** /usuario   
+
+- **2. Fazer login**   
+
+  **GET** /usuarioLogin   
+
+- **3. Usar token nas rotas protegidas**   
+
+  Copie o token do login e inclua nos headers:   
+
+```   
+Authorization: Bearer SEU_TOKEN
+```   
+
