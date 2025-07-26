@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "test": "jest"
   },
   "author": "Gilvan",
   "license": "ISC",
@@ -19,5 +20,9 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5",
+    "supertest": "^7.1.3"
   }
 }

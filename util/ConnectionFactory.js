@@ -6,7 +6,9 @@ let sqliteDb = null;
 module.exports = class ConnectionFactory{
     static getConnection(){
 
-        if (process.env.USE_SQLITE === 'true') {
+        const isTest = process.env.NODE_ENV === 'test';
+
+        if (process.env.USE_SQLITE === 'true' || isTest) {
             if(!sqliteDb) {
                 sqliteDb = new Database(':memory:');
 

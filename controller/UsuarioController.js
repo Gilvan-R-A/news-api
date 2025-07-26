@@ -17,47 +17,47 @@ module.exports = class UsuarioController {
         request.body.senhaUsuario
       );
 
+      let usuarioEncontrado = null;
+
       if (this.isSQLite) {
-   
-        const row = this.conexao
-          .prepare(
-            `
-                    SELECT * FROM usuario WHERE emailUsuario = ? AND senhaUsuario = ?`
-          )
-          .get(usuario.emailUsuario, usuario.senhaUsuario);
-
-        if (row) {
-          const token = jwt.sign(
-            { email: usuario.emailUsuario }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: "1h"}
-          );
-
-          return response.status(200).json({ msg: "Usuário logado", token });
-        } else {
-          return response.status(404).json({ msg: "Email ou senha inválidos" });
-        }
+        usuarioEncontrado = this.conexao
+          .prepare(`
+           SELECT * FROM usuario WHERE emailUsuario = ? AND senhaUsuario = ?
+           `)
+           .get(usuario.emailUsuario, usuario.senhaUsuario);
       } else {
         const resultado = await this.conexao.query(
-          "SELECT * FROM usuario WHERE emailusuario = $1 and senhausuario = $2",
+          "SELECT * FROM usuario WHERE emailUsuario = $1 AND senhaUsuario = $2", 
           [usuario.emailUsuario, usuario.senhaUsuario]
         );
-
-        if (resultado.rowCount > 0) {
-          const token = jwt.sign(
-            { email: usuario.emailUsuario }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: "1h"}
-          );
-
-          response.status(200).json({ msg: "Usuário logado", token });
-        } else {
-          response.status(404).json({ msg: "Email ou senha inválidos" });
-        }
+        usuarioEncontrado = resultado.rowCount > 0 ? resultado.rows[0] : null;
       }
+
+      if (usuarioEncontrado) {
+        const token = jwt.sign(
+          { email: usuario.emailUsuario}, 
+          process.env.JWT_SECRET, 
+          { expiresIn: "1h"}
+        );
+
+        return response.status(200).json({
+          success: true, 
+          msg: "Usuário logado", 
+          token
+        });
+      } else {
+        return response.status(401).json({
+          success: false, 
+          error: "Email ou senha inválidos"
+        });
+      }
+
     } catch (error) {
       console.error(`Erro ao fazer login!! Erro: ${error}`);
-      response.status(404).send(false);
+      return response.status(500).json({
+        success: false, 
+        error: "Erro interno ao tentar fazer login"
+      });
     }
   }
 
@@ -86,7 +86,7 @@ module.exports = class UsuarioController {
       );
 
       if (existe) {
-        return response.status(409).json({msg: "Usuário com este e-mail já existe"});
+        return response.status(409).json({ success: false, error: "Usuário com este e-mail já existe"});
       }
 
       if (this.isSQLite) {
@@ -100,10 +100,10 @@ module.exports = class UsuarioController {
       );
       }
 
-      return response.status(201).send(true);
+      return response.status(201).json({ success: true});
     } catch (error) {
       console.error(`Erro ao cadastrar usuário!! Erro: ${error}`);
-      response.status(404).send(false);
+      return response.status(500).json({ success: false, error: "Erro ao cadastrar usuário" });
     }
   }
 
