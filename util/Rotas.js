@@ -16,4 +16,4 @@ router.delete('/postagens/:id', verificarToken, postagemController.excluir.bind(
 router.post('/usuarios', usuarioController.cadastrar.bind(usuarioController));
 router.post('/usuarios/login', usuarioController.logar.bind(usuarioController));
 
-module.exports();
+module.exports = router;
