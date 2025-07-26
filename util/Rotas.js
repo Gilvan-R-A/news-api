@@ -1,37 +1,19 @@
-const controladorRotas = require('express').Router();
+const express = require('express');
+const router = express.Router();
 const PostagemController = require('../controller/PostagemController');
 const UsuarioController = require('../controller/UsuarioController');
-const { request, response } = require('express');
 const verificarToken = require('../middleware/auth');
 
+const postagemController = new PostagemController();
+const usuarioController = new UsuarioController();
 
-controladorRotas.get('/postagem', (request, response) => {
-    new PostagemController().listarTodos(request, response);
-});
+router.get('/postagens', postagemController.listarTodos.bind(postagemController));
+router.get('/postagens/:id', postagemController.listarPorId.bind(postagemController));
+router.post('/postagens', verificarToken, postagemController.cadastrar.bind(postagemController));
+router.put('/postagens/:id', verificarToken, postagemController.alterar.bind(postagemController));
+router.delete('/postagens/:id', verificarToken, postagemController.excluir.bind(postagemController));
 
-controladorRotas.get('/postagem/:idPostagem', (request, response) => {
-    new PostagemController().listarPorId(request, response);
-});
+router.post('/usuarios', usuarioController.cadastrar.bind(usuarioController));
+router.post('/usuarios/login', usuarioController.logar.bind(usuarioController));
 
-controladorRotas.post('/postagem', verificarToken, (request, response) => {
-    new PostagemController().cadastrar(request, response);
-});
-
-controladorRotas.put('/postagem/:idPostagem', verificarToken, (request, response) => {
-    new PostagemController().alterar(request, response);
-});
-
-controladorRotas.delete('/postagem/:idPostagem', verificarToken, (request, response) => {
-    new PostagemController().excluir(request, response);
-});
-
-//rotas de acesso ao Usuario
-controladorRotas.get('/usuarioLogin', (request, response) => {
-    new UsuarioController().logar(request, response);
-});
-
-controladorRotas.post('/usuario', (request, response) => {
-    new UsuarioController().cadastrar(request, response);
-});
-
-module.exports = controladorRotas;
+module.exports();
