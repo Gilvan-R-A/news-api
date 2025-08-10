@@ -57,6 +57,7 @@ news-api/
 - **body-parser**: Middleware para parsing do corpo das requisições.
 - **cors**: Middleware para permitir requisições CORS (Cross-Origin Resource Sharing).   
 - **dotenv** - Variáveis de ambiente   
+- **Jest** e **Supertest** - Testes automatizados   
 
 ## Autenticação JWT   
 
@@ -80,18 +81,18 @@ Authorization: Bearer SEU_TOKEN_AQUI
 
 | Método | Rota                    | Descrição                    | Ambiente         |
 | ------ | ----------------------- | ---------------------------- | ---------------- |
-| GET    | `/postagem`             | Listar todas as postagens    | Local e Produção |
-| GET    | `/postagem/:idPostagem` | Obter postagem por ID        | Local e Produção |
-| POST   | `/postagem`             | Criar nova postagem          | Local e Produção |
-| PUT    | `/postagem/:idPostagem` | Atualizar postagem existente | Local e Produção |
-| DELETE | `/postagem/:idPostagem` | Deletar uma postagem         | Local e Produção |
+| GET    | `/postagens`             | Listar todas as postagens    | Local e Produção |
+| GET    | `/postagens/:idPostagem` | Obter postagem por ID        | Local e Produção |
+| POST   | `/postagens`             | Criar nova postagem          | Local e Produção |
+| PUT    | `/postagens/:idPostagem` | Atualizar postagem existente | Local e Produção |
+| DELETE | `/postagens/:idPostagem` | Deletar uma postagem         | Local e Produção |
 
 ### Usuários   
 
 | Método | Rota            | Descrição              | Ambiente         |
 | ------ | --------------- | ---------------------- | ---------------- |
-| POST   | `/usuario`      | Cadastrar novo usuário | Local e Produção |
-| GET   | `/usuarioLogin` | Login e geração do JWT      | Local e Produção |
+| POST   | `/usuarios`      | Cadastrar novo usuário | Local e Produção |
+| POST   | `/usuarios/login` | Login e geração do JWT      | Local e Produção |
 
 
 Para usar em produção, prefixe com https://news-api-u1bc.onrender.com   
@@ -246,7 +247,49 @@ Essas validações são centralizadas no arquivo: util/ValidadorUsuario.js .
 
 ```  
 { "success": true }
+```      
+
+## Testes Automatizados   
+
+O projeto conta com **testes automatizados** para garantir o funcionamento correto das funcionalidades principais.   
+
+### Como executar os testes:   
+
 ```   
+npm test   
+```   
+
+### Gerar relatório de cobertura:   
+
+```   
+npm run test:coverage   
+```   
+
+**O que é testado:**   
+
+- **Usuário**   
+  - Cadastro de usuário
+  - Login e autenticação JWT
+
+- Postagens   
+  - CRUD completo (criar, listar, buscar por ID, atualizar e excluir)
+  - Validação de campos obrigatórios
+  - Erros para rotas inexistentes ou dados inválidos   
+
+**Exemplo de saída:**   
+
+```   
+PASS  tests/postagem.test.js
+  ✓ Deve criar uma nova postagem (50 ms)
+  ✓ Deve listar todas as postagens (30 ms)
+  ✓ Deve buscar uma postagem por ID (20 ms)
+  ✓ Deve atualizar uma postagem existente (25 ms)
+  ✓ Deve excluir uma postagem existente (18 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+```   
+
 
 ## Configuração do Banco de Dados   
 
@@ -330,5 +373,10 @@ npm start
 
 ```   
 Authorization: Bearer SEU_TOKEN
-```   
+```     
+
+**Observações**   
+
+- Para usar em produção, prefixe com https://news-api-u1bc.onrender.com   
+- Exemplo: GET https://news-api-u1bc.onrender.com/postagens
 
