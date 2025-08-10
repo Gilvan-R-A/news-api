@@ -1,5 +1,10 @@
 const request = require('supertest');
 const app = require('../main');
+const db = require('../util/ConnectionFactory').getConnection();
+
+beforeEach(() => {
+    db.prepare('DELETE FROM usuario').run();
+})
 
 describe('Testes de Usuário', () => {
     it('Deve cadastrar um novo usuário com sucesso', async () => {
@@ -30,6 +35,12 @@ describe('Testes de Usuário', () => {
     });
 
     it('Deve fazer login e retornar um token JWT', async () => {
+
+        await db.prepare(`INSERT INTO usuario (emailUsuario, senhaUsuario) VALUES(?, ?)`).run(
+            'admin@teste.com', 
+            '!9Cavalo7'
+        );
+
         const res = await request(app)
         .post('/usuarios/login')
         .send({

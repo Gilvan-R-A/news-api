@@ -10,7 +10,7 @@ module.exports = class ConnectionFactory{
 
         if (process.env.USE_SQLITE === 'true' || isTest) {
             if(!sqliteDb) {
-                sqliteDb = new Database(':memory:');
+                sqliteDb = new Database('file:testdb?mode=memory&cache=shared');
 
                 sqliteDb.exec(`
                     CREATE TABLE IF NOT EXISTS postagem(
