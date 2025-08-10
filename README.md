@@ -33,7 +33,7 @@ news-api/
 ├── package.json
 ``` 
 
-# Descrição dos Arquivos
+## Descrição dos Arquivos
 
 - **controller/**: Controladores que contêm a lógica das rotas (Postagem e Usuário).
 - **model/**: Modelos de dados.   
