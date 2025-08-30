@@ -7,6 +7,9 @@ const verificarToken = require('../middleware/auth');
 const postagemController = new PostagemController();
 const usuarioController = new UsuarioController();
 
+router.get('/', (req, res) => {
+    res.redirect('/postagens');
+});
 router.get('/postagens', postagemController.listarTodos.bind(postagemController));
 router.get('/postagens/:idPostagem', postagemController.listarPorId.bind(postagemController));
 router.post('/postagens', verificarToken, postagemController.cadastrar.bind(postagemController));
