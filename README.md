@@ -57,7 +57,9 @@ news-api/
 - **body-parser**: Middleware para parsing do corpo das requisições.
 - **cors**: Middleware para permitir requisições CORS (Cross-Origin Resource Sharing).   
 - **dotenv** - Variáveis de ambiente   
-- **Jest** e **Supertest** - Testes automatizados   
+- **Jest** e **Supertest** - Testes automatizados 
+- **Docker** - Encapsula a aplicação em container  
+- **Docker Compose** - Gerencia os containers da aplicação de do banco de dados
 
 ## Autenticação JWT   
 
@@ -314,7 +316,14 @@ insert into postagem (titulopostagem, conteudopostagem, categoriapostagem, datap
 values ('Primeira Postagem', 'Essa é a minha primeira postagem', 'teste', '19/08/2023');
 ```   
 
-## Instalação e Execução   
+## Instalação e Execução  
+
+A API pode ser executada de duas maneiras:   
+
+- **Tradicionalmente** com Node.js instalado na máquina.
+- **Via Docker/Docker Compose**, sem necessidade de instalar Node/Postgres localmente.   
+
+## 1. Execução Tradicional (Node.js direto)
 
 ### Requisitos   
 
@@ -356,6 +365,37 @@ npm start
 ```   
 
 5. A API estará disponível em **http://localhost:3000**.   
+
+## 2. Execução com Docker / Docker Compose   
+
+**Requisitos**
+
+- Docker
+- Docker Compose   
+
+1. Clonar o repositório:   
+
+```   
+git clone https://github.com/Gilvan-R-A/news-api.git
+cd news-api
+```   
+
+2. Criar e configurar o arquivo .env (mesmo formato acima).   
+
+3. Construir e subir os containers:   
+
+```   
+docker-compose up -d --build
+```   
+
+4. A API estará disponível em:   
+http://localhost:3000   
+
+5. Parar a aplicação:   
+
+```   
+docker-compose down
+```   
 
 ## Testes com Postman   
 
