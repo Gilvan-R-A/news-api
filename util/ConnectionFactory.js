@@ -10,7 +10,7 @@ module.exports = class ConnectionFactory{
 
         if (process.env.USE_SQLITE === 'true' || isTest) {
             if(!sqliteDb) {
-                sqliteDb = new Database('file:testdb?mode=memory&cache=shared');
+                sqliteDb = new Database(':memory');
 
                 sqliteDb.exec(`
                     CREATE TABLE IF NOT EXISTS postagem(
@@ -27,13 +27,24 @@ module.exports = class ConnectionFactory{
                         );
                      `);
 
-                     sqliteDb.prepare(`
-                        INSERT INTO postagem (tituloPostagem, conteudoPostagem, categoriaPostagem, dataPostagem) VALUES (?, ?, ?, ?)`).run('Primeira Postagem', 'Essa é a minha primeira postagem', 'Editorial', '06/07/2025');
+                     const exists = sqliteDb.prepare(`
+                        SELECT COUNT(*) as count FROM postagem`).get();
 
-                    sqliteDb.prepare(`
+                    if(exists.count === 0) {
+                        sqliteDb.prepare(`
+                        INSERT INTO postagem (tituloPostagem, conteudoPostagem, categoriaPostagem, dataPostagem) VALUES (?, ?, ?, ?)`).run('Primeira Postagem', 'Essa é a minha primeira postagem', 'Editorial', '06/07/2025');
+                    }
+
+                    const userExists = sqliteDb.prepare(`
+                        SELECT COUNT(*) as count FROM usuario`).get();
+
+                    if (userExists.count === 0) {
+                        sqliteDb.prepare(`
                         INSERT INTO usuario (emailUsuario, senhaUsuario) 
                         VALUES (?, ?)
                         `).run('admin@teste.com', '!9Cavalo7');
+                    }
+                    
             }
             return sqliteDb;
         }
